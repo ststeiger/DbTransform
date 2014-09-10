@@ -1,0 +1,33 @@
+﻿
+CREATE TABLE __types(
+	myuid uniqueidentifier NOT NULL,
+	mybit bit NULL,
+	mytinyint tinyint NULL,
+	mysmallint smallint NULL,
+	myinteger int NULL,
+	mybiginteger bigint NULL,
+	myreal real NULL,
+	myfloat float NULL,
+	mydecimal decimal(18, 0) NULL,
+	mynumeric numeric(18, 0) NULL,
+	mymoney money NULL,
+	mychar char(10) NULL,
+	mynchar nchar(10) NULL,
+	myvarchar varchar(10) NULL,
+	mynvarchar nvarchar(10) NULL,
+	myvarcharmax varchar(max) NULL,
+	mynvarcharmax nvarchar(max) NULL,
+	mytext text NULL,
+	myntext ntext NULL,
+	mydate date NULL,
+	mytime time(7) NULL,
+	mysmalldatetime smalldatetime NULL,
+	mydatetime datetime NULL,
+	mydatetime2 datetime2(7) NULL,
+	mydatetimeoffset datetimeoffset(7) NULL,
+	mybinary binary(50) NULL,
+	myvarbinary varbinary(50) NULL,
+	mybarbinarymax varbinary(max) NULL,
+	myimage image NULL
+) -- ON PRIMARY TEXTIMAGE_ON PRIMARY
+;

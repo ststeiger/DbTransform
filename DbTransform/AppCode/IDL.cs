@@ -1,9 +1,4 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-
 namespace DbTransform
 {
 
@@ -17,14 +12,30 @@ namespace DbTransform
 
         public static DB.Abstraction.cDAL SetupDAL()
         {
-            System.Data.SqlClient.SqlConnectionStringBuilder csb = new System.Data.SqlClient.SqlConnectionStringBuilder();
+            
+
+			// string strConnectionString = "Server=127.0.0.1;Port=5432;Database=lsmail;User ID=postgres;Password=TopSecret;Pooling=False;Timeout=15; CommandTimeout=20;";
+			//return DB.Abstraction.cDAL.CreateInstance("PostGreSQL", strConnectionString);
+
+            DB.Abstraction.UniversalConnectionStringBuilder csb = null;
+            // csb = SetupMs();
+            csb = SetupPg();
+
+            return DB.Abstraction.cDAL.CreateInstance(csb.EngineName, csb.ConnectionString);
+        }
+
+
+        public static DB.Abstraction.UniversalConnectionStringBuilder SetupMs()
+        {
+            DB.Abstraction.UniversalConnectionStringBuilder csb =
+                DB.Abstraction.UniversalConnectionStringBuilder.CreateInstance(DB.Abstraction.cDAL.DataBaseEngine_t.MS_SQL);
 
             csb.IntegratedSecurity = true;
-            csb.DataSource = Environment.MachineName;
-            csb.InitialCatalog = "WorldDb";
+            csb.Server = System.Environment.MachineName;
+            csb.DataBase = "WorldDb";
             if (!csb.IntegratedSecurity)
             {
-                csb.UserID = "";
+                csb.UserName = "";
                 csb.Password = "";
             }
 
@@ -32,14 +43,29 @@ namespace DbTransform
             csb.Pooling = false;
             csb.MaxPoolSize = 5;
 
-
-			string strConnectionString = "Server=127.0.0.1;Port=5432;Database=lsmail;User ID=postgres;Password=Inspiron1300;Pooling=False;Timeout=15; CommandTimeout=20;";
-			return DB.Abstraction.cDAL.CreateInstance("PostGreSQL", strConnectionString);
-
-
-
-			//return DB.Abstraction.cDAL.CreateInstance("MS_SQL", csb.ConnectionString);
+            return csb;
         }
+
+        public static DB.Abstraction.UniversalConnectionStringBuilder SetupPg()
+        {
+            DB.Abstraction.UniversalConnectionStringBuilder csb =
+                DB.Abstraction.UniversalConnectionStringBuilder.CreateInstance(DB.Abstraction.cDAL.DataBaseEngine_t.PostGreSQL);
+
+
+            csb.Server = "127.0.0.1";
+            csb.Port = 5432;
+            csb.DataBase = "lsmail";
+            csb.UserName = "postgres";
+            csb.Password = "TopSecret";
+            csb.Pooling = false;
+            csb.ConnectTimeout = 15;
+            csb.CommandTimeout = 20;
+
+            // string strConnectionString = "Server=127.0.0.1;Port=5432;Database=lsmail;User ID=postgres;Password=TopSecret;Pooling=False;Timeout=15; CommandTimeout=20;";
+
+            return csb;
+        }
+
 
 
         public static DB.Abstraction.cDAL DAL = SetupDAL();
@@ -55,12 +81,12 @@ namespace DbTransform
             this.Name = TableName;
 
 			System.Data.DataTable dt = DAL.GetAllColumnInformation(TableName);
-			Console.WriteLine(dt.Rows.Count);
+            System.Console.WriteLine(dt.Rows.Count);
 
             for (int i = 0; i < dt.Rows.Count; ++i)
             {
-				//IntermediateDefinition idl = IntermediateDefinition.MS_2_Idl(dt.Rows[i]);
-				IntermediateDefinition idl = IntermediateDefinition.PG_2_Idl(dt.Rows[i]);
+				IntermediateDefinition idl = IntermediateDefinition.MS_2_Idl(dt.Rows[i]);
+                //IntermediateDefinition idl = IntermediateDefinition.PG_2_Idl(dt.Rows[i]);
 
 				this.Columns.Add(idl);
             }
@@ -424,7 +450,7 @@ namespace DbTransform
 
 			string strNullable = System.Convert.ToString(dr["is_nullable"]);
 
-			idl.nullable = StringComparer.InvariantCultureIgnoreCase.Equals(strNullable, "yes");
+            idl.nullable = System.StringComparer.InvariantCultureIgnoreCase.Equals(strNullable, "yes");
 			idl.signed = true;
 			idl.unsigned = false;
 			idl.defaultValue = System.Convert.ToString(dr["column_default"]);
@@ -445,7 +471,7 @@ namespace DbTransform
 
 			System.Collections.Generic.Dictionary<string, datatype_t> dict
 				= new System.Collections.Generic.Dictionary<string, datatype_t>
-				      (StringComparer.InvariantCultureIgnoreCase)
+                      (System.StringComparer.InvariantCultureIgnoreCase)
 			;
 
 
@@ -521,22 +547,22 @@ namespace DbTransform
 			}
 			if (idl.type == datatype_t.@decimal)
 			{
-				if(StringComparer.InvariantCultureIgnoreCase.Equals( idl.native_type, "numeric"))
+                if (System.StringComparer.InvariantCultureIgnoreCase.Equals(idl.native_type, "numeric"))
 					idl.isNumeric = true;
 			}
 			if (idl.type == datatype_t.boolean)
 			{
-				if(StringComparer.InvariantCultureIgnoreCase.Equals( idl.native_type, "bit"))
+                if (System.StringComparer.InvariantCultureIgnoreCase.Equals(idl.native_type, "bit"))
 					idl.isRealBit = true;
 			}
 			if (idl.type == datatype_t.time)
 			{
-				if(StringComparer.InvariantCultureIgnoreCase.Equals( idl.native_type, "time with time zone"))
+                if (System.StringComparer.InvariantCultureIgnoreCase.Equals(idl.native_type, "time with time zone"))
 					idl.withTimezone = true;
 			}
 			if (idl.type == datatype_t.timestamp)
 			{
-				if(StringComparer.InvariantCultureIgnoreCase.Equals( idl.native_type, "timestamp with time zone"))
+                if (System.StringComparer.InvariantCultureIgnoreCase.Equals(idl.native_type, "timestamp with time zone"))
 					idl.withTimezone = true;
 			}
 			if (idl.type == datatype_t.array)
@@ -562,7 +588,7 @@ namespace DbTransform
 
             string strNullable = System.Convert.ToString(dr["is_nullable"]);
 
-            idl.nullable = StringComparer.InvariantCultureIgnoreCase.Equals(strNullable, "yes");
+            idl.nullable = System.StringComparer.InvariantCultureIgnoreCase.Equals(strNullable, "yes");
             idl.signed = true;
             idl.unsigned = false;
             idl.defaultValue = System.Convert.ToString(dr["column_default"]);
@@ -580,7 +606,7 @@ namespace DbTransform
 
             System.Collections.Generic.Dictionary<string, datatype_t> dict
             = new System.Collections.Generic.Dictionary<string, datatype_t>
-            (StringComparer.InvariantCultureIgnoreCase);
+            (System.StringComparer.InvariantCultureIgnoreCase);
 
             dict.Add("smalldatetime", datatype_t.datetime);
             dict.Add("datetime", datatype_t.datetime);
@@ -641,7 +667,7 @@ namespace DbTransform
             if (idl.type == datatype_t.vartext || idl.type == datatype_t.fixtext)
             {
                 // nvarchar, ntext
-                if (idl.native_type.StartsWith("n", StringComparison.InvariantCultureIgnoreCase))
+                if (idl.native_type.StartsWith("n", System.StringComparison.InvariantCultureIgnoreCase))
                 {
                     idl.encoding = System.Text.Encoding.UTF8;
                     if (idl.length > 4000 || idl.length < 0)
@@ -657,15 +683,15 @@ namespace DbTransform
             }
             if (idl.type == datatype_t.@decimal)
             {
-                if(StringComparer.InvariantCultureIgnoreCase.Equals( idl.native_type, "numeric"))
+                if (System.StringComparer.InvariantCultureIgnoreCase.Equals(idl.native_type, "numeric"))
                     idl.isNumeric = true;
             }
             if (idl.type == datatype_t.integer)
             {
-                if (StringComparer.InvariantCultureIgnoreCase.Equals(idl.native_type, "int"))
+                if (System.StringComparer.InvariantCultureIgnoreCase.Equals(idl.native_type, "int"))
                     idl.precision = 32;
 
-                if (StringComparer.InvariantCultureIgnoreCase.Equals(idl.native_type, "bigint"))
+                if (System.StringComparer.InvariantCultureIgnoreCase.Equals(idl.native_type, "bigint"))
                     idl.precision = 64;
             }
             

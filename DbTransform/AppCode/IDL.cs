@@ -9,13 +9,10 @@ namespace DbTransform
         public System.Collections.Generic.List<IntermediateDefinition> Columns = new System.Collections.Generic.List<IntermediateDefinition>();
 
 
-
         public static DB.Abstraction.cDAL SetupDAL()
         {
-            
-
 			// string strConnectionString = "Server=127.0.0.1;Port=5432;Database=lsmail;User ID=postgres;Password=TopSecret;Pooling=False;Timeout=15; CommandTimeout=20;";
-			//return DB.Abstraction.cDAL.CreateInstance("PostGreSQL", strConnectionString);
+			// return DB.Abstraction.cDAL.CreateInstance("PostGreSQL", strConnectionString);
 
             DB.Abstraction.UniversalConnectionStringBuilder csb = null;
             // csb = SetupMs();
@@ -46,11 +43,11 @@ namespace DbTransform
             return csb;
         }
 
+
         public static DB.Abstraction.UniversalConnectionStringBuilder SetupPg()
         {
             DB.Abstraction.UniversalConnectionStringBuilder csb =
                 DB.Abstraction.UniversalConnectionStringBuilder.CreateInstance(DB.Abstraction.cDAL.DataBaseEngine_t.PostGreSQL);
-
 
             csb.Server = "127.0.0.1";
             csb.Port = 5432;
@@ -65,7 +62,6 @@ namespace DbTransform
 
             return csb;
         }
-
 
 
         public static DB.Abstraction.cDAL DAL = SetupDAL();
@@ -89,8 +85,10 @@ namespace DbTransform
                 //IntermediateDefinition idl = IntermediateDefinition.PG_2_Idl(dt.Rows[i]);
 
 				this.Columns.Add(idl);
-            }
-        }
+            } // Next i
+
+        } // End Constructor
+
 
     } // End Class IntermediateTable 
 

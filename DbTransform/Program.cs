@@ -70,12 +70,12 @@ namespace DbTransform
             // EmbeddedBrowserHelper.FixBrowserVersion();
 
 
-
-            System.Globalization.IdnMapping idn = new System.Globalization.IdnMapping();
-            string strPunyCode = idn.GetAscii("www.altstätten.ch");
-            string strUnicode = idn.GetUnicode(strPunyCode);
-            Console.WriteLine(strPunyCode);
-            Console.WriteLine(strUnicode);
+            // Testing Punycode:
+            //System.Globalization.IdnMapping idn = new System.Globalization.IdnMapping();
+            //string strPunyCode = idn.GetAscii("www.altstätten.ch");
+            //string strUnicode = idn.GetUnicode(strPunyCode);
+            //Console.WriteLine(strPunyCode);
+            //Console.WriteLine(strUnicode);
 
 
             IntermediateTable idt = new IntermediateTable("Profiles"); //"__types", "Profiles"
